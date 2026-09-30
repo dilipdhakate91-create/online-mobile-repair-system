@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FixMaster Phone Care & Lab</title>
+<style>
+:root{--primary:#2563eb;--dark:#0f172a;--muted:#64748b;--bg:#f1f5f9;--card:#fff;--green:#16a34a;--red:#dc2626;--orange:#ea580c}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+header{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;padding:24px 5%;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.logo{font-size:25px;font-weight:800}.tag{color:#cbd5e1;font-size:14px;margin-top:5px}
+nav button{background:transparent;border:1px solid #ffffff40;color:#fff;padding:10px 14px;border-radius:9px;margin:3px;cursor:pointer}
+nav button:hover{background:#ffffff15}
+main{max-width:1200px;margin:28px auto;padding:0 18px}.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,#2563eb,#0f172a);color:#fff;padding:38px;border-radius:20px;margin-bottom:22px}
+.hero h1{margin:0 0 10px;font-size:36px}.hero p{max-width:700px;color:#dbeafe}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}.card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 8px 25px #0f172a10}
+.card h2,.card h3{margin-top:0}.stat{font-size:30px;font-weight:800;color:var(--primary)}
+label{display:block;font-weight:700;font-size:13px;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}
+button.primary{border:0;background:var(--primary);color:#fff;padding:12px 18px;border-radius:9px;font-weight:700;cursor:pointer}
+button.secondary{border:1px solid #cbd5e1;background:#fff;color:var(--dark);padding:11px 16px;border-radius:9px;cursor:pointer}
+button.danger{border:0;background:var(--red);color:#fff;padding:9px 13px;border-radius:8px;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.problem{border:2px solid #e2e8f0;border-radius:12px;padding:14px;cursor:pointer;background:#fff}.problem.selected{border-color:var(--primary);background:#eff6ff}
+.problem strong{display:block}.price{font-weight:800;color:var(--green);margin-top:7px}
+.slot{padding:11px;border:1px solid #cbd5e1;border-radius:8px;margin:6px 0;cursor:pointer}.slot.selected{background:#dbeafe;border-color:var(--primary)}.slot.full{opacity:.45;cursor:not-allowed}
+.status{display:inline-block;padding:5px 9px;border-radius:99px;background:#dbeafe;color:#1d4ed8;font-size:12px;font-weight:800}
+.timeline{border-left:3px solid #bfdbfe;margin:20px 0;padding-left:18px}.event{margin:0 0 18px}.event b{display:block}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e2e8f0}th{background:#f8fafc}
+.notice{padding:12px;border-radius:10px;margin:12px 0}.success{background:#dcfce7;color:#166534}.error{background:#fee2e2;color:#991b1b}
+footer{text-align:center;color:var(--muted);padding:35px}
+@media(max-width:600px){.hero h1{font-size:28px}header{padding:18px}nav{width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="logo">🔧 FixMaster Phone Care & Lab</div><div class="tag">Certified OEM Mobile Repairs with 180-Day Guarantee</div></div>
+  <nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('book')">Book Repair</button>
+    <button onclick="showPage('track')">Track Repair</button>
+    <button onclick="showPage('admin')">Admin</button>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <h1>Professional Mobile Repair Booking</h1>
+    <p>Book a repair, choose store visit or free home pickup, see an estimated price, and track your repair status online.</p>
+    <button class="primary" onclick="showPage('book')">Book a Repair →</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="stat">180 Days</div><b>Warranty</b><p>Warranty coverage on eligible repairs.</p></div>
+    <div class="card"><div class="stat">₹0</div><b>Home Pickup</b><p>Free doorstep diagnostic pickup for home orders.</p></div>
+    <div class="card"><div class="stat">6</div><b>Time Slots</b><p>Convenient repair appointment slots.</p></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h2>Why choose FixMaster?</h2>
+    <div class="grid">
+      <p>✓ OEM-grade display and battery replacements</p><p>✓ Data safety — storage is not formatted without consent</p>
+      <p>✓ Transparent estimated pricing</p><p>✓ Online booking and repair tracking</p>
+    </div>
+  </div>
+</section>
+
+<section id="book" class="page">
+  <div class="card">
+    <h2>Book Your Mobile Repair</h2>
+    <div id="bookMsg"></div>
+    <div class="grid">
+      <div>
+        <label>Brand</label><select id="brand" onchange="loadModels()"></select>
+      </div>
+      <div>
+        <label>Model</label><select id="model" onchange="updatePrice()"></select>
+      </div>
+    </div>
+    <label>Select Problem(s)</label>
+    <div id="problems" class="problem-grid"></div>
+    <div class="grid">
+      <div><label>Service Type</label>
+        <select id="serviceType" onchange="togglePickup()"><option value="shop_visit">Store Visit</option><option value="home_pickup">Free Home Pickup</option></select>
+      </div>
+      <div><label>Date</label><input type="date" id="date" onchange="loadSlots()"></div>
+    </div>
+    <div id="pickupFields" style="display:none">
+      <div class="grid"><div><label>Pickup Address</label><input id="address" placeholder="Your address"></div><div><label>Pincode</label><input id="pincode" placeholder="6 digit pincode"></div></div>
+      <label>Landmark</label><input id="landmark" placeholder="Nearby landmark">
+    </div>
+    <label>Available Time Slot</label><div id="slots"></div>
+    <div class="grid">
+      <div><label>Customer Name</label><input id="customerName" placeholder="Full name"></div>
+      <div><label>Phone</label><input id="customerPhone" placeholder="10 digit mobile number"></div>
+    </div>
+    <div class="grid">
+      <div><label>Email</label><input id="customerEmail" type="email" placeholder="Email address"></div>
+      <div><label>Problem Details</label><textarea id="details" placeholder="Describe the issue"></textarea></div>
+    </div>
+    <div class="card" style="margin:18px 0;background:#f8fafc">
+      <b>Estimated Price:</b> <span id="estimate" style="font-size:25px;color:#16a34a">₹0</span>
+    </div>
+    <button class="primary" onclick="createBooking()">Confirm Booking</button>
+  </div>
+</section>
+
+<section id="track" class="page">
+  <div class="card">
+    <h2>Track Your Repair</h2>
+    <p>Enter your booking ID (example: FIX-48921) or phone number.</p>
+    <div class="grid"><input id="trackQuery" placeholder="Booking ID or phone number"><button class="primary" onclick="trackBooking()">Track Repair</button></div>
+    <div id="trackResult"></div>
+  </div>
+</section>
+
+<section id="admin" class="page">
+  <div id="adminLogin" class="card">
+    <h2>Admin Login</h2><p>Demo credentials: <b>admin / admin123</b></p>
+    <label>Username</label><input id="adminUser" value="admin">
+    <label>Password</label><input id="adminPass" type="password" value="admin123">
+    <br><br><button class="primary" onclick="adminLogin()">Login</button>
+  </div>
+  <div id="adminPanel" style="display:none">
+    <div class="grid">
+      <div class="card"><div class="stat" id="statBookings">0</div><b>Total Bookings</b></div>
+      <div class="card"><div class="stat" id="statActive">0</div><b>Active Repairs</b></div>
+      <div class="card"><div class="stat" id="statRevenue">₹0</div><b>Revenue</b></div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h2>Booking Management</h2>
+      <input id="adminSearch" placeholder="Search by ID, customer, phone, model or brand" oninput="renderAdmin()">
+      <div style="overflow:auto;margin-top:12px"><table><thead><tr><th>ID</th><th>Customer</th><th>Device</th><th>Date</th><th>Status</th><th>Price</th><th>Action</th></tr></thead><tbody id="bookingTable"></tbody></table></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>FixMaster Phone Care & Lab • 10:00 AM – 08:30 PM (Mon – Sat) • +91 98765 43210</footer>
+
+<script>
+const catalog={
+problems:[
+{id:"screen",name:"Screen / Touch Glass Broken",cat:"Display",price:1899,m:40,w:180,desc:"OEM grade glass & OLED panel replacement"},
+{id:"battery",name:"Battery Health / Fast Drain",cat:"Power",price:1199,m:30,w:180,desc:"Brand new high-capacity Li-ion cell"},
+{id:"charging_port",name:"Charging Port / Loose Flex",cat:"Power",price:699,m:25,w:90,desc:"Type-C / Lightning connector repair"},
+{id:"camera",name:"Camera Lens / Blurry Sensor",cat:"Optics",price:1499,m:45,w:90,desc:"Camera module replacement"},
+{id:"speaker",name:"Speaker / Earpiece / Mic Muffled",cat:"Audio",price:599,m:25,w:90,desc:"Speaker or microphone acoustic repair"},
+{id:"water_damage",name:"Water / Liquid Spill Diagnostic",cat:"Motherboard",price:1299,m:120,w:30,desc:"Board de-oxidation and diagnostics"},
+{id:"software",name:"Software Bootloop / Stuck on Logo",cat:"System",price:799,m:40,w:30,desc:"Firmware re-flash and optimization"},
+{id:"back_glass",name:"Back Glass / Rear Housing Crack",cat:"Body",price:1399,m:60,w:90,desc:"Rear panel glass replacement"}
+],
+brands:[
+["Apple",[["iPhone 16 Pro Max",2.8],["iPhone 16 Pro",2.6],["iPhone 16",2.2],["iPhone 15 Pro Max",2.5],["iPhone 15 Pro",2.3],["iPhone 15",1.9],["iPhone 14 Pro Max",2.1],["iPhone 14",1.7],["iPhone 13 Pro",1.8],["iPhone 13",1.5],["iPhone 12",1.3],["iPhone 11",1.1]]],
+["Samsung",[["Galaxy S24 Ultra",2.7],["Galaxy S24+",2.2],["Galaxy S24",2],["Galaxy S23 Ultra",2.3],["Galaxy S23",1.8],["Galaxy Z Fold 5",3.2],["Galaxy Z Flip 5",2.6],["Galaxy A55 5G",1.3],["Galaxy A35 5G",1.1],["Galaxy M34",.95]]],
+["Google Pixel",[["Pixel 9 Pro XL",2.6],["Pixel 9 Pro",2.4],["Pixel 9",1.9],["Pixel 8 Pro",2.2],["Pixel 8",1.6],["Pixel 7a",1.2],["Pixel 7 Pro",1.7],["Pixel 6a",1]]],
+["OnePlus",[["OnePlus 12",2.1],["OnePlus 12R",1.5],["OnePlus 11",1.7],["OnePlus Nord 4",1.2],["OnePlus Nord CE 3",.95],["OnePlus 10 Pro",1.5]]],
+["Xiaomi / Redmi",[["Xiaomi 14 Ultra",2.4],["Xiaomi 14",1.9],["Redmi Note 13 Pro+",1.3],["Redmi Note 13",.9],["Redmi 13C 5G",.8],["POCO X6 Pro",1.1]]],
+["Vivo",[["Vivo X100 Pro",2.5],["Vivo V30 Pro",1.4],["Vivo T3 5G",.9],["Vivo Y200",.85]]],
+["Realme",[["Realme GT 6",1.8],["Realme 12 Pro+ 5G",1.3],["Realme Narzo 70",.85]]],
+["Motorola",[["Motorola Edge 50 Ultra",2.2],["Motorola Edge 50 Pro",1.4],["Motorola G84 5G",.9],["Motorola Razr 50 Ultra",2.8]]]
+]};
+const slots=["10:00 AM - 11:30 AM","11:30 AM - 01:00 PM","02:00 PM - 03:30 PM","03:30 PM - 05:00 PM","05:00 PM - 06:30 PM","06:30 PM - 08:00 PM"];
+let bookings=JSON.parse(localStorage.getItem("fixmaster_bookings")||"[]"), selectedProblems=[], selectedSlot="";
+function money(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="admin"&&sessionStorage.getItem("admin"))renderAdmin()}
+function init(){
+  const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());document.getElementById("date").min=d.toISOString().slice(0,10);document.getElementById("date").value=d.toISOString().slice(0,10);
+  const b=document.getElementById("brand");b.innerHTML=catalog.brands.map(x=>`<option>${x[0]}</option>`).join("");loadModels();renderProblems();loadSlots();
+}
+function loadModels(){const name=document.getElementById("brand").value;const found=catalog.brands.find(x=>x[0]===name);document.getElementById("model").innerHTML=found[1].map(x=>`<option value="${x[0]}" data-m="${x[1]}">${x[0]}</option>`).join("");updatePrice()}
+function renderProblems(){document.getElementById("problems").innerHTML=catalog.problems.map(p=>`<div class="problem" id="p-${p.id}" onclick="toggleProblem('${p.id}')"><strong>${p.name}</strong><small>${p.desc}</small><div class="price">From ${money(p.price)}</div></div>`).join("")}
+function toggleProblem(id){selectedProblems.includes(id)?selectedProblems=selectedProblems.filter(x=>x!==id):selectedProblems.push(id);document.getElementById("p-"+id).classList.toggle("selected");updatePrice()}
+function updatePrice(){const m=Number(document.getElementById("model")?.selectedOptions[0]?.dataset.m||1);const total=selectedProblems.reduce((s,id)=>s+(catalog.problems.find(p=>p.id===id)?.price||0),0)*m;document.getElementById("estimate").textContent=money(total)}
+function togglePickup(){document.getElementById("pickupFields").style.display=document.getElementById("serviceType").value==="home_pickup"?"block":"none"}
+function loadSlots(){
+ const date=document.getElementById("date").value;document.getElementById("slots").innerHTML=slots.map(s=>{const count=bookings.filter(b=>b.date===date&&b.slot===s&&b.status!=="Cancelled").length;const full=count>=3;return `<div class="slot ${full?"full":""} ${selectedSlot===s?"selected":""}" onclick="${full?"":"selectSlot('"+s+"')"}">${s} — ${full?"Full":(3-count)+" spaces left"}</div>`}).join("")
+}
+function selectSlot(s){selectedSlot=s;loadSlots()}
+function msg(id,text,type){document.getElementById(id).innerHTML=`<div class="notice ${type}">${text}</div>`}
+function createBooking(){
+ const brand=document.getElementById("brand").value,model=document.getElementById("model").value,date=document.getElementById("date").value,name=document.getElementById("customerName").value.trim(),phone=document.getElementById("customerPhone").value.trim();
+ if(!selectedProblems.length||!selectedSlot||!name||phone.length<6||!date){msg("bookMsg","Please select device, repair problem, date, slot and valid customer details.","error");return}
+ if(bookings.filter(b=>b.date===date&&b.slot===selectedSlot&&b.status!=="Cancelled").length>=3){msg("bookMsg","Selected slot is full. Please choose another.","error");loadSlots();return}
+ const multiplier=Number(document.getElementById("model").selectedOptions[0].dataset.m),price=selectedProblems.reduce((s,id)=>s+catalog.problems.find(p=>p.id===id).price,0)*multiplier;
+ const id="FIX-"+Math.floor(10000+Math.random()*90000),booking={id,createdAt:new Date().toISOString(),brand,model,problems:selectedProblems.slice(),problemLabels:selectedProblems.map(id=>catalog.problems.find(p=>p.id===id).name),problemDetails:document.getElementById("details").value,serviceType:document.getElementById("serviceType").value,pickupAddress:document.getElementById("address").value,pickupPincode:document.getElementById("pincode").value,pickupLandmark:document.getElementById("landmark").value,date,slot:selectedSlot,customerName:name,customerPhone:phone,customerEmail:document.getElementById("customerEmail").value,estimatedPrice:price,finalPrice:price,paymentStatus:"unpaid",status:"Booked",warrantyExpiresAt:new Date(Date.now()+180*86400000).toISOString().slice(0,10),timeline:[{status:"Booked",timestamp:new Date().toISOString(),note:"Booking created via FixMaster portal"}]};
+ bookings.unshift(booking);save();msg("bookMsg",`Booking confirmed! Your booking ID is <b>${id}</b>. Save this ID to track your repair.`,"success");selectedProblems=[];selectedSlot="";renderProblems();loadSlots();updatePrice();
+}
+function save(){localStorage.setItem("fixmaster_bookings",JSON.stringify(bookings))}
+function trackBooking(){
+ const q=document.getElementById("trackQuery").value.trim().toLowerCase();const results=bookings.filter(b=>b.id.toLowerCase().includes(q)||b.customerPhone.replace(/\D/g,"").includes(q.replace(/\D/g,"")));
+ if(!q||!results.length){document.getElementById("trackResult").innerHTML='<div class="notice error">No booking found.</div>';return}
+ const b=results[0];document.getElementById("trackResult").innerHTML=`<div class="card" style="margin-top:18px"><h3>${b.id} <span class="status">${b.status}</span></h3><p><b>${b.brand} ${b.model}</b> • ${b.customerName}</p><p>${b.problemLabels.join(", ")}</p><p>Appointment: ${b.date} • ${b.slot}</p><p>Estimated/Final Price: <b>${money(b.finalPrice)}</b></p><div class="timeline">${b.timeline.map(e=>`<div class="event"><b>${e.status}</b><small>${new Date(e.timestamp).toLocaleString()}</small><div>${e.note||""}</div></div>`).join("")}</div>${b.status!=="Delivered"&&b.status!=="Cancelled"?`<button class="danger" onclick="cancelBooking('${b.id}')">Cancel Booking</button>`:""}</div>`;
+}
+function cancelBooking(id){const b=bookings.find(x=>x.id===id);if(!b||b.status==="Delivered")return;b.status="Cancelled";b.timeline.push({status:"Cancelled",timestamp:new Date().toISOString(),note:"Booking cancelled by customer"});save();trackBooking();loadSlots()}
+function adminLogin(){if((document.getElementById("adminUser").value==="admin"&&document.getElementById("adminPass").value==="admin123")||(document.getElementById("adminUser").value==="demo"&&document.getElementById("adminPass").value==="demo")){sessionStorage.setItem("admin","1");document.getElementById("adminLogin").style.display="none";document.getElementById("adminPanel").style.display="block";renderAdmin()}else alert("Invalid credentials. Demo: admin / admin123")}
+function renderAdmin(){
+ const q=(document.getElementById("adminSearch")?.value||"").toLowerCase();const list=bookings.filter(b=>!q||[b.id,b.customerName,b.customerPhone,b.model,b.brand].join(" ").toLowerCase().includes(q));
+ document.getElementById("statBookings").textContent=bookings.length;document.getElementById("statActive").textContent=bookings.filter(b=>["Booked","Received","Repairing","Ready"].includes(b.status)).length;document.getElementById("statRevenue").textContent=money(bookings.filter(b=>b.paymentStatus==="paid"||b.status==="Delivered").reduce((s,b)=>s+b.finalPrice,0));
+ document.getElementById("bookingTable").innerHTML=list.map(b=>`<tr><td><b>${b.id}</b></td><td>${b.customerName}<br><small>${b.customerPhone}</small></td><td>${b.brand} ${b.model}</td><td>${b.date}</td><td><select onchange="changeStatus('${b.id}',this.value)">${["Booked","Received","Repairing","Ready","Delivered","Cancelled"].map(s=>`<option ${b.status===s?"selected":""}>${s}</option>`).join("")}</select></td><td>${money(b.finalPrice)}</td><td><button class="secondary" onclick="viewAdmin('${b.id}')">View</button></td></tr>`).join("")||"<tr><td colspan='7'>No bookings found.</td></tr>"
+}
+function changeStatus(id,status){const b=bookings.find(x=>x.id===id);if(!b)return;b.status=status;if(status==="Delivered"){b.paymentStatus="paid";b.warrantyExpiresAt=new Date(Date.now()+180*86400000).toISOString().slice(0,10)}b.timeline.push({status,timestamp:new Date().toISOString(),note:"Status updated by service desk"});save();renderAdmin()}
+function viewAdmin(id){const b=bookings.find(x=>x.id===id);alert(`${b.id}\n${b.customerName} • ${b.customerPhone}\n${b.brand} ${b.model}\nProblems: ${b.problemLabels.join(", ")}\nStatus: ${b.status}\nPrice: ${money(b.finalPrice)}\nWarranty until: ${b.warrantyExpiresAt}`)}
+init();
+</script>
+</body>
+</html>
